@@ -11,11 +11,11 @@ Muy buen trabajo: el informe es claro, el código funciona y sus conclusiones se
 |---|---|
 | Corrección conceptual | 22 / 25 |
 | Calidad de la explicación teórica | 21 / 25 |
-| Corrección de la implementación | 17 / 20 |
+| Corrección de la implementación | 18 / 20 |
 | Calidad del análisis de las gráficas | 16 / 20 |
 | Documentación y organización del informe | 7 / 10 |
-| **Total** | **83 / 100** |
-| **Nota (0–5)** | **4.15** |
+| **Total** | **84 / 100** |
+| **Nota (0–5)** | **4.20** |
 
 ## 1. Corrección conceptual (22 / 25)
 **Lo que hizo bien:**
@@ -37,14 +37,13 @@ Muy buen trabajo: el informe es claro, el código funciona y sus conclusiones se
 - El análisis línea a línea de insertion sort queda a medias: pone las cantidades de ejecuciones, pero no suma los costos ni llega a la expresión final del peor y el mejor caso.
 - Para el peor y el mejor caso conviene explicar qué forma tiene la lista de entrada, no solo el escenario.
 
-## 3. Corrección de la implementación (17 / 20)
+## 3. Corrección de la implementación (18 / 20)
 **Lo que hizo bien:**
 - `insertion_sort` y `merge_sort` ordenan bien (de mayor a menor), no alteran la lista recibida, cuentan comparaciones entre elementos y no usan `sorted()` ni `sort()`.
 - Los tres generadores dan listas de valores distintos, del tamaño pedido, y los aleatorios son reproducibles con semilla.
 
 **Lo que puede mejorar:**
 - La función interna de `merge_sort` no tiene explicación (docstring).
-- Los cuatro archivos terminan sin salto de línea final, un detalle de estilo.
 
 ## 4. Calidad del análisis de las gráficas (16 / 20)
 **Lo que hizo bien:**
@@ -74,4 +73,4 @@ Sí. Los scripts corren sin errores, ordenan correctamente y generan las tres gr
 - Complete los cálculos paso a paso hasta el resultado final, incluso los que parecen obvios.
 - Incluya su nombre completo y todos los pasos de reproducción, activando el entorno virtual.
 - Enlace el código al inicio de cada parte práctica y repita las mediciones varias veces, indicándolo en el informe.
-- Agregue docstring a las funciones internas y termine los archivos con salto de línea.
+- Agregue docstring a las funciones internas.
