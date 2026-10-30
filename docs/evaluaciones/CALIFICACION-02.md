@@ -35,7 +35,7 @@
 
 ## 3. Corrección de la implementación (17 / 25)
 **Lo que hizo bien:**
-- Las tres funciones están bien: dan la suma correcta, resuelven los tres casos, no llaman a la fuerza bruta y no modifican la lista. Las probé con cientos de listas aleatorias y coinciden.
+- Las tres funciones están bien: dan la suma correcta, resuelven los tres casos, no llaman a la fuerza bruta y no modifican la lista. Coinciden en cientos de listas aleatorias.
 - Tienen *type hints* y *docstrings*.
 
 **Lo que puede mejorar:**
