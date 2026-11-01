@@ -1,9 +1,39 @@
+"""Medicion de tiempos: fuerza bruta vs. divide y venceras."""
+
 import os
 import random
+import statistics
 import time
+from collections.abc import Callable
+
+import matplotlib
+
+matplotlib.use("Agg")  # Backend sin ventana: funciona sin pantalla
 import matplotlib.pyplot as plt
 
 from subarreglo import subarreglo_fuerza_bruta, subarreglo_maximo
+
+SEMILLA = 42
+TAMANOS = [10, 50, 100, 500, 1000, 2000, 4000, 8000]
+REPETICIONES = 7  # cada medicion se repite y se reporta la mediana
+
+
+def medir(funcion: Callable[[], object], repeticiones: int = REPETICIONES) -> float:
+    """Mide el tiempo de una llamada y devuelve la mediana de varias corridas.
+
+    Args:
+        funcion: funcion sin argumentos que ejecuta el algoritmo a medir.
+        repeticiones: cuantas veces se repite la medicion.
+
+    Returns:
+        La mediana de los tiempos, en segundos.
+    """
+    tiempos: list[float] = []
+    for _ in range(repeticiones):
+        inicio = time.perf_counter()
+        funcion()
+        tiempos.append(time.perf_counter() - inicio)
+    return statistics.median(tiempos)
 
 
 def ejecutar_experimento() -> tuple[list[int], list[float], list[float]]:
@@ -11,36 +41,27 @@ def ejecutar_experimento() -> tuple[list[int], list[float], list[float]]:
 
     Returns:
         Tupla con las listas de tamanos, tiempos de fuerza bruta y tiempos
-        de divide y venceras.
+        de divide y venceras (mediana de varias repeticiones, en segundos).
     """
-    # Semilla fija para reproducibilidad
-    random.seed(42)
+    random.seed(SEMILLA)  # Semilla fija para reproducibilidad
 
-    # Tamanos requeridos (incluye <100 y >=4000)
-    tamanos = [10, 50, 100, 500, 1000, 2000, 4000, 8000]
     tiempos_fb: list[float] = []
     tiempos_dv: list[float] = []
 
-    print(f"{'N':>6} | {'Suma Coincide':>13} | {'Tiempo FB (s)':>15} | {'Tiempo DV (s)':>15}")
+    print(f"Mediana de {REPETICIONES} repeticiones por tamano (semilla {SEMILLA}).")
+    print(f"{'N':>6} | {'Suma coincide':>13} | {'Tiempo FB (s)':>15} | {'Tiempo DV (s)':>15}")
     print("-" * 58)
 
-    for n in tamanos:
+    for n in TAMANOS:
         # Generar datos fuera del cronometro
         datos = [float(random.randint(-100, 100)) for _ in range(n)]
 
-        # Cronometrar Fuerza Bruta
-        inicio_fb = time.perf_counter()
+        tiempo_fb = medir(lambda: subarreglo_fuerza_bruta(datos))
+        tiempo_dv = medir(lambda: subarreglo_maximo(datos, 0, n - 1))
+
+        # Verificacion de coincidencia de las sumas
         res_fb = subarreglo_fuerza_bruta(datos)
-        fin_fb = time.perf_counter()
-        tiempo_fb = fin_fb - inicio_fb
-
-        # Cronometrar Divide y Venceras
-        inicio_dv = time.perf_counter()
         res_dv = subarreglo_maximo(datos, 0, n - 1)
-        fin_dv = time.perf_counter()
-        tiempo_dv = fin_dv - inicio_dv
-
-        # Verificacion de coincidencia exacta de sumas
         coinciden = abs(res_fb[2] - res_dv[2]) < 1e-7
         assert coinciden, f"Discrepancia en N={n}: FB={res_fb[2]}, DV={res_dv[2]}"
 
@@ -49,7 +70,7 @@ def ejecutar_experimento() -> tuple[list[int], list[float], list[float]]:
 
         print(f"{n:6d} | {str(coinciden):>13} | {tiempo_fb:15.6f} | {tiempo_dv:15.6f}")
 
-    return tamanos, tiempos_fb, tiempos_dv
+    return TAMANOS, tiempos_fb, tiempos_dv
 
 
 def generar_grafica(
@@ -65,7 +86,7 @@ def generar_grafica(
         marker="o",
         linewidth=2,
         color="crimson",
-        label="Fuerza Bruta $\Theta(n^2)$",
+        label=r"Fuerza bruta $\Theta(n^2)$",
     )
     plt.plot(
         tamanos,
@@ -73,22 +94,22 @@ def generar_grafica(
         marker="s",
         linewidth=2,
         color="royalblue",
-        label="Divide y Venceras $\Theta(n \log n)$",
+        label=r"Divide y vencerás $\Theta(n \log n)$",
     )
 
-    plt.title("Tiempo de Ejecución: Fuerza Bruta vs. Divide y Vencerás", fontsize=14)
-    plt.xlabel("Tamaño de Entrada $n$ (Número de Días / Registros)", fontsize=12)
-    plt.ylabel("Tiempo de Ejecución (segundos)", fontsize=12)
+    plt.title("Tiempo de ejecución: fuerza bruta vs. divide y vencerás", fontsize=14)
+    plt.xlabel("Tamaño de entrada $n$ (número de días)", fontsize=12)
+    plt.ylabel(f"Tiempo de ejecución (s), mediana de {REPETICIONES} corridas", fontsize=12)
     plt.grid(True, linestyle="--", alpha=0.7)
     plt.legend(fontsize=11)
     plt.tight_layout()
 
     ruta_grafica = os.path.join("graficas", "tiempo_vs_n.png")
-    plt.savefig(ruta_grafica, dpi=300)
+    plt.savefig(ruta_grafica, dpi=150)
     plt.close()
-    print(f"\nGráfica guardada exitosamente en '{ruta_grafica}'.")
+    print(f"\nGráfica guardada en '{ruta_grafica}'.")
 
 
 if __name__ == "__main__":
-    tamanos, tiempos_fb, tiempos_dv = ejecutar_experimento()
-    generar_grafica(tamanos, tiempos_fb, tiempos_dv)
+    resultado = ejecutar_experimento()
+    generar_grafica(*resultado)
