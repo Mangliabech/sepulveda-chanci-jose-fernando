@@ -1,73 +1,72 @@
 # Retroalimentación — Laboratorio 2: Dividir y vencer
 
 **Estudiante:** Jose Fernando Sepulveda · **Laboratorio:** Laboratorio evaluativo 02 — Dividir y vencer
-**Fecha límite:** 2026-10-21 23:59 · **Versión revisada:** commit `5e07184`
+**Fecha límite:** 2026-11-02 23:59 · **Versión revisada:** commit `21e5da0`
+
+Excelente trabajo: un informe muy completo, con datos propios y un código que funciona.
 
 ## Nota
 
 | Criterio | Puntos |
 |---|---|
-| Corrección conceptual | 15 / 20 |
-| Calidad de la explicación teórica | 18 / 20 |
-| Corrección de la implementación | 17 / 25 |
-| Calidad del análisis de las gráficas | 14 / 25 |
-| Documentación y organización del informe | 3 / 10 |
-| **Total** | **67 / 100** |
-| **Nota (0–5)** | **3.35** |
+| Corrección conceptual | 19 / 20 |
+| Calidad de la explicación teórica | 20 / 20 |
+| Corrección de la implementación | 24 / 25 |
+| Calidad del análisis de las gráficas | 24 / 25 |
+| Documentación y organización del informe | 7 / 10 |
+| **Total** | **94 / 100** |
+| **Nota (0–5)** | **4.70** |
 
-## 1. Corrección conceptual (15 / 20)
+## 1. Corrección conceptual (19 / 20)
 **Lo que hizo bien:**
-- Compara con el máximo de un arreglo y explica que dividir no mejora (`T(n) = 2T(n/2) + Θ(1)` da `Θ(n)`).
-- Recomienda divide y vencerás y da una estimación a 1.000.000 de registros sin usar regla de tres lineal.
+- Identifica que el punto de cruce está entre n = 50 y n = 100 y lo explica con el costo de las llamadas recursivas en tamaños pequeños.
+- Compara con el máximo de un arreglo: plantea `T(n) = 2T(n/2) + Θ(1)`, verifica el caso 1 del método maestro y concluye que dividir no mejora nada porque combinar es barato pero no hay nada que ahorrar.
+- Recomienda divide y vencerás, estima 1.000.000 de registros (horas contra segundos), declara que es una estimación y explica qué puede alterarla.
 
-**Lo que puede mejorar:**
-- La estimación y la conclusión sobre tamaños pequeños usan tiempos que no coinciden con su gráfica publicada (ver punto 4), así que los 16 horas y 2.91 segundos no están bien respaldados.
-- Dice que divide y vencerás gana desde n = 50, pero no lo sustenta con valores de su gráfica; además dice "milisegundos" para tamaños donde los tiempos son mucho menores.
-- Falta decir con claridad que el resultado es una estimación y qué la puede alterar.
+**Lo que puede mejorar (y cómo corregirlo):**
+- La estimación supone una constante fija calibrada con un solo tamaño, y no se discute cuánto cambia esa constante entre los tamaños medidos.
+  → *Cómo corregirlo:* compare la constante obtenida con n = 4000 y con n = 8000 y comente si es estable antes de extrapolar.
 
-## 2. Calidad de la explicación teórica (18 / 20)
+## 2. Calidad de la explicación teórica (20 / 20)
 **Lo que hizo bien:**
-- Plantea la recurrencia, explica de dónde sale cada término y aplica el caso 2 del método maestro comparando `f(n)` con `n^(log_b a)`.
-- Justifica el `Θ(n²)` de la fuerza bruta contando los pares de días.
+- Plantea la recurrencia explicando de dónde sale cada término (dos mitades, cruce lineal).
+- Resuelve con el método maestro verificando la condición del caso 2 y además lo confirma con el árbol de recursión nivel por nivel.
+- Justifica el `Θ(n²)` de la fuerza bruta contando las iteraciones, `n(n+1)/2`.
 
-**Lo que puede mejorar:**
-- Falta resolver la recurrencia paso a paso o mostrar por qué el caso cruzado cuesta exactamente un recorrido lineal.
-
-## 3. Corrección de la implementación (17 / 25)
+## 3. Corrección de la implementación (24 / 25)
 **Lo que hizo bien:**
-- Las tres funciones están bien: dan la suma correcta, resuelven los tres casos, no llaman a la fuerza bruta y no modifican la lista. Coinciden en cientos de listas aleatorias.
-- Tienen *type hints* y *docstrings*.
+- Las tres funciones devuelven la suma correcta en la serie de ocho días, un elemento, todos negativos, todos positivos y un caso cruzado.
+- Ambos algoritmos coinciden en las listas aleatorias y ninguna modifica la lista recibida.
+- `subarreglo_maximo` resuelve los tres casos y no llama a la fuerza bruta.
+- Todas las funciones tienen *type hints* y *docstrings* con `Args` y `Returns`; hay dos líneas en blanco entre funciones.
 
-**Lo que puede mejorar:**
-- `pruebas.py` falla al ejecutarse: en el caso del tramo cruzado espera 20, pero la respuesta correcta es 21 (2 − 1 + 8 + 12). El error está en la prueba, no en el algoritmo, pero así las pruebas no terminan con éxito.
-- `medicion.py` y `pruebas.py` no tienen la *docstring* de módulo y la función de pruebas no tiene tipo de retorno.
+**Lo que puede mejorar (y cómo corregirlo):**
+- Las pruebas aleatorias usan números decimales, mientras que el experimento usa enteros entre -100 y 100.
+  → *Cómo corregirlo:* agregue también listas aleatorias de enteros para probar el mismo tipo de datos que usa la medición.
 
-## 4. Calidad del análisis de las gráficas (14 / 25)
+## 4. Calidad del análisis de las gráficas (24 / 25)
 **Lo que hizo bien:**
-- La gráfica existe, con las dos curvas en los mismos ejes, título, ejes rotulados y leyenda, y cubre ocho tamaños (de 10 a 8000) con semilla fija.
-- Calcula el factor al duplicar n para ambos algoritmos y lo compara con `Θ(n²)` y `Θ(n log n)`.
+- La gráfica tiene ambas curvas en los mismos ejes, título, ejes rotulados y leyenda, con ocho tamaños (de 10 a 8000).
+- Calcula el factor al duplicar n para cada algoritmo (fuerza bruta cerca de 4, divide y vencerás cerca de 2,09) y lo contrasta con lo esperado, con el valor teórico `n log n` calculado.
+- Lo que afirma coincide con la gráfica: la fuerza bruta llega a cerca de 1 s en n = 8000 y la otra curva queda casi pegada al eje.
 
-**Lo que puede mejorar:**
-- Los valores del informe no coinciden con la gráfica publicada: el informe dice que fuerza bruta pasa de 0.92 s a 3.71 s (n = 4000 a 8000), pero en `tiempo_vs_n.png` pasa de cerca de 2.85 s a cerca de 4.13 s, un factor de unos 1.45 y no 4. Lo mismo ocurre con divide y vencerás (cerca de 0.03 s en n = 8000, no 0.0152 s).
-- La gráfica publicada no parece corresponder a una sola corrida limpia (el salto entre 2000 y 4000 es muy grande); conviene repetir cada medición y usar el promedio o la mediana, y decirlo en el informe.
+**Lo que puede mejorar (y cómo corregirlo):**
+- En la gráfica los tamaños pequeños se amontonan al inicio del eje y el cruce entre 50 y 100 no se alcanza a ver; se apoya solo en la tabla.
+  → *Cómo corregirlo:* agregue una segunda gráfica (o un recuadro) con solo los tamaños menores o igual a 500 y enlácela en el informe.
 
-## 5. Documentación y organización del informe (3 / 10)
+## 5. Documentación y organización del informe (7 / 10)
 **Lo que hizo bien:**
-- La carpeta `laboratorios/lab2-divide-y-vencer/` está en una ubicación válida y tiene todos los archivos pedidos.
+- La carpeta está en una ubicación válida (`laboratorios/lab2-divide-y-vencer/`) con todos los archivos pedidos.
+- La gráfica se ve en el informe, el código está enlazado y hay instrucciones para reproducir.
 - Hay más de tres commits con mensajes descriptivos.
 
-**Lo que puede mejorar:**
-- El informe no tiene su nombre ni las instrucciones para reproducir (activar entorno, ejecutar pruebas y medición).
-- No sigue el orden pedido: faltan las secciones de la Parte 1 y la Parte 2.
-- No enlaza `subarreglo.py`, `pruebas.py` ni `medicion.py`.
-- La gráfica no está incrustada en el informe: solo se menciona su nombre, así que no se ve en GitHub.
+**Lo que puede mejorar (y cómo corregirlo):**
+- No siguió el orden pedido del informe: la "Parte 1" del informe es la recurrencia, y falta la descripción de cómo verificó las soluciones y qué casos cubrió (ocho días, un elemento, negativos, positivos, cruzado, listas aleatorias).
+  → *Cómo corregirlo:* agregue una Parte 1 con el enlace a `subarreglo.py` y `pruebas.py` y esa lista de casos; deje la Parte 2 para la gráfica con el enlace a `medicion.py` y la Parte 3 para las cinco respuestas.
+- Las cinco preguntas del análisis no están numeradas ni separadas como en el enunciado (recurrencia, medido contra esperado, tamaños pequeños, cuándo dividir, concepto para la gerente), lo que hace difícil ubicarlas.
+  → *Cómo corregirlo:* titule cada respuesta con el número y el nombre de la pregunta.
+- La carpeta `graficas/` incluye un archivo `.gitkeep` que no era necesario.
+  → *Cómo corregirlo:* elimínelo con `git rm laboratorios/lab2-divide-y-vencer/graficas/.gitkeep`.
 
 ## ¿El código funciona?
-Los algoritmos funcionan y dan resultados correctos. `medicion.py` corre y genera la gráfica, pero `pruebas.py` se detiene con un error por un valor esperado mal calculado en una prueba.
-
-## Para el próximo laboratorio
-- Ejecute siempre sus pruebas antes de entregar y revise a mano los valores esperados.
-- Copie en el informe los números que lee de su propia gráfica publicada y haga los cálculos con ellos.
-- Siga el orden del entregable: nombre, instrucciones, Parte 1, Parte 2 con la gráfica incrustada, Parte 3, con enlaces al código.
-- Repita las mediciones y use el promedio o la mediana para evitar saltos por ruido.
-- Agregue docstrings de módulo, type hints (incluido el tipo de retorno) y dos líneas en blanco entre funciones en todos los archivos.
+Sí. Las pruebas pasan, ambos algoritmos dan siempre la misma suma en listas aleatorias y el experimento está listo para regenerar la gráfica.
